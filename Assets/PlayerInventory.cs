@@ -8,11 +8,6 @@ public class PlayerInventory : MonoBehaviour {
 	// Design decision bools, to be removed later
 	bool allButtons = true;
 	bool displayNameDesc = false;
-	bool shouldRemove = false;
-	
-	// Inventory related
-	public GUISkin mySkin;
-	int focusedButton = -1;
 
 	
 	public static List<Item> Inventory {
@@ -23,7 +18,6 @@ public class PlayerInventory : MonoBehaviour {
 	}
 	
 	public void OnGUI() {
-		GUI.skin = mySkin;
 		if (allButtons) {
 			if (displayNameDesc)
 				GUILayout.BeginArea(new Rect(10,10,500,500));
@@ -32,29 +26,13 @@ public class PlayerInventory : MonoBehaviour {
 			
 			for (int i = 0; i < _inventory.Count; i++) {
 				GUILayout.BeginHorizontal();
-				GUI.SetNextControlName("item" + i.ToString());
+				GUI.SetNextControlName("item");
 				if (GUILayout.Button(_inventory[i].icon)) {
-					if (shouldRemove) {					
-						//this.transform.position.x = _inventory[i].transform.position.x;  // This is a line that isn't tested
-						_inventory[i].active = true;
-						_inventory.Remove(_inventory[i]);
-						
-						i--;
-					}
-					else {
-						if (GUI.GetNameOfFocusedControl() != ("item" + i.ToString())) {
-							
-							GUI.FocusControl("item" + i.ToString());
-							focusedButton = i;
-							_inventory[i].isToggled = true;
-						}
-						else {
-							GUIUtility.keyboardControl = 0;
-							focusedButton = -1;
-							_inventory[i].isToggled = false;
-							
-						}
-					}
+					_inventory[i].transform.position = this.transform.position;
+					_inventory[i].active = true;
+					_inventory.Remove(_inventory[i]);
+					
+					i--;
 				}
 				else {
 					if (displayNameDesc) {
@@ -66,8 +44,6 @@ public class PlayerInventory : MonoBehaviour {
 						GUILayout.EndHorizontal();
 				}
 			}
-			if (focusedButton >= 0)
-				GUI.FocusControl("item" + focusedButton.ToString());
 			GUILayout.EndArea();
 		}
 		else {
