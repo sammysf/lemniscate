@@ -1,0 +1,3 @@
+# gitignore file; only push scripts to git
+!.gitignore
+!/Assets/*.cs
